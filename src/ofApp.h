@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxProjectionMask.h"
 #include "ofxLayerMask.h"
+#include "ofxKinectV2OSC.h"
 #include "Sketch.h"
 #include "sketch20150701.h"
 
@@ -23,9 +24,16 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-    ofxProjectionMask designer;
+    ofxProjectionMask projectionMask;
     vector<ofxLayerMask*> patterns;
     vector<Sketch*> sketches;
 
     sketch20150701 sketch20150701;
+
+    ofxKinectV2OSC kinect;
+    Skeleton* skeleton;
+    vector<Skeleton>* skeletons;
+    ofTrueTypeFont smallFont, largeFont;
+    BodyRenderer renderer;
+    bool drawKinect;
 };
