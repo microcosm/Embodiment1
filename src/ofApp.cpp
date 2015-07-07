@@ -22,6 +22,10 @@ void ofApp::setup(){
     renderer.setup(skeletons, largeFont);
     renderer.hideAll();
     drawKinect = false;
+
+    kinectCommands = "KINECT\n\n";
+    kinectCommands.append("d = show debug\n");
+    kinectCommands.append("k = show kinect\n");
 }
 
 void ofApp::update(){
@@ -41,28 +45,26 @@ void ofApp::draw(){
         patterns.at(i)->end();
     }
     projectionMask.draw();
-    kinect.drawDebug();
+    
+    ofSetColor(ofColor::white);
+    smallFont.drawString(kinectCommands, ofGetWidth() - 200, 60);
 
     if(drawKinect) {
         ofEnableAlphaBlending();
         ofSetColor(ofColor::black, 200);
+        ofFill();
         ofRect(0, 0, ofGetWidth(), ofGetHeight());
         ofDisableAlphaBlending();
+        kinect.drawDebug();
         renderer.draw();
+        ofSetColor(ofColor::white);
+        largeFont.drawString("fps:\n" + ofToString(ofGetFrameRate()), ofGetWidth() - 220, ofGetHeight() - 100);
     }
-
-    string commands = "COMMANDS\n\n";
-    commands.append("d = show debug\n");
-    commands.append("k = show kinect\n");
-
-    ofSetColor(ofColor::white);
-    smallFont.drawString(commands, ofGetWidth() - 220, 40);
-    largeFont.drawString("fps:\n" + ofToString(ofGetFrameRate()), ofGetWidth() - 220, ofGetHeight() - 100);
 }
 
 void ofApp::keyReleased(int key){
     if(key == 'k') {
-        drawKinect = true;
+        drawKinect = !drawKinect;
         renderer.toggleJoints();
         renderer.toggleBones();
         renderer.toggleHands();

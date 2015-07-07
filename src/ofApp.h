@@ -36,4 +36,5 @@ public:
     ofTrueTypeFont smallFont, largeFont;
     BodyRenderer renderer;
     bool drawKinect;
+    string kinectCommands;
 };
