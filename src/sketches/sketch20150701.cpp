@@ -31,8 +31,6 @@ void sketch20150701::setup(vector<Skeleton>* _skeletons){
     for(int i = 0; i < shapes.size(); i++) {
         shapeSystem.add(shapes.at(i));
     }
-    
-    incrementX = 0;
 }
 
 void sketch20150701::update(){
@@ -44,12 +42,13 @@ void sketch20150701::update(){
     }
 
     if(skeletons->size() > 0) {
-        accelerateTowards(skeletons->at(0).getLeftHandNormal(), 0.002);
-    }
-
-    incrementX = location.x;
-    for(int i = 0; i < textures.size(); i++) {
-        textures.at(i).incrementTextureOffsetY(incrementX);
+        leftInfluence.x = ofMap(skeletons->at(0).getLeftHandNormal().x, 0, 1, -0.01, 0.01);
+        rightInfluence.x = ofMap(skeletons->at(0).getRightHandNormal().x, 0, 1, -0.01, 0.01);
+        for(int i = 0; i < textures.size(); i++) {
+            (i % 2 == 0) ?
+                textures.at(i).incrementTextureOffsetX(leftInfluence.x) :
+                textures.at(i).incrementTextureOffsetX(rightInfluence.x);
+        }
     }
     
     for(int i = 0; i < masker.numLayers(); i++) {

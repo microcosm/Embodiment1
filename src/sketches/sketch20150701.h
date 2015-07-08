@@ -23,5 +23,5 @@ public:
     ofxTexturePlane texture;
     ofxLayerMask masker;
     int finalFrame, frameDecay, lastDrawableFrameForLoop;
-    float incrementX;
+    ofVec2f leftInfluence, rightInfluence;
 };
