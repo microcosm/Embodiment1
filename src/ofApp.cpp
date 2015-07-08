@@ -24,8 +24,8 @@ void ofApp::setup(){
         sketches.at(i)->setup(skeletons);
         patterns.push_back(projectionMask.newPattern(sketches.at(i)->width, sketches.at(i)->height));
     }
-    projectionMask.setup(HOMOGRAPHY);
-    //designer.setup(HOMOGRAPHY, PRESETS_PRODUCTION);
+    //projectionMask.setup(HOMOGRAPHY);
+    projectionMask.setup(HOMOGRAPHY, PRESETS_PRODUCTION);
 }
 
 void ofApp::update(){

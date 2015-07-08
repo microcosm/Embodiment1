@@ -6,8 +6,10 @@ void sketch20150701::setup(vector<Skeleton>* _skeletons){
 
     minInfluenceX = -0.01;
     maxInfluenceX = 0.01;
-    minInfluenceY = -0.02;
+    minInfluenceY = -0.015;
     maxInfluenceY = 0.003;
+    minInfluenceZ = 0.2;
+    maxInfluenceZ = 0.4;
 
     ofEnableSmoothing();
     shapeSystem.setup();
@@ -49,13 +51,18 @@ void sketch20150701::update(){
     if(skeletons->size() > 0) {
         leftInfluence.x = ofMap(skeletons->at(0).getLeftHandNormal().x, 0, 1, minInfluenceX, maxInfluenceX);
         leftInfluence.y = ofMap(skeletons->at(0).getLeftHandNormal().y, 0, 1, minInfluenceY, maxInfluenceY);
+        leftInfluence.z = ofMap(skeletons->at(0).getLeftHandNormal().z, 0, 1, minInfluenceZ, maxInfluenceZ);
         rightInfluence.x = ofMap(skeletons->at(0).getRightHandNormal().x, 0, 1, minInfluenceX, maxInfluenceX);
         rightInfluence.y = ofMap(skeletons->at(0).getRightHandNormal().y, 0, 1, minInfluenceY, maxInfluenceY);
+        rightInfluence.z = ofMap(skeletons->at(0).getRightHandNormal().z, 0, 1, minInfluenceZ, maxInfluenceZ);
+
         for(int i = 0; i < textures.size(); i++) {
             if(i % 2 == 0) {
                 textures.at(i).incrementTextureOffset(leftInfluence);
+                textures.at(i).setTextureScale(leftInfluence.z * (i+1));
             } else {
                 textures.at(i).incrementTextureOffset(rightInfluence);
+                textures.at(i).setTextureScale(rightInfluence.z * (i+1));
             }
         }
     }
