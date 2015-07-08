@@ -1,6 +1,7 @@
 #include "sketch20150701.h"
 
-void sketch20150701::setup(){
+void sketch20150701::setup(vector<Skeleton>* _skeletons){
+    Sketch::setup(_skeletons);
     setSize(500, 500);
     
     ofEnableSmoothing();
@@ -30,13 +31,25 @@ void sketch20150701::setup(){
     for(int i = 0; i < shapes.size(); i++) {
         shapeSystem.add(shapes.at(i));
     }
+    
+    incrementX = 0;
 }
 
 void sketch20150701::update(){
+    Sketch::update();
     for(int i = 0; i < shapes.size(); i++) {
         i % 2 == 0 ?
         shapes.at(i).incrementRotateZ(1) :
         shapes.at(i).incrementRotateZ(-1);
+    }
+
+    if(skeletons->size() > 0) {
+        accelerateTowards(skeletons->at(0).getLeftHandNormal(), 0.002);
+    }
+
+    incrementX = location.x;
+    for(int i = 0; i < textures.size(); i++) {
+        textures.at(i).incrementTextureOffsetY(incrementX);
     }
     
     for(int i = 0; i < masker.numLayers(); i++) {
@@ -79,6 +92,7 @@ void sketch20150701::update(){
 }
 
 void sketch20150701::draw(){
+    Sketch::draw();
     ofBackground(ofColor::black);
     masker.draw();
     masker.drawOverlay();

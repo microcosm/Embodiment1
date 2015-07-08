@@ -9,7 +9,7 @@
 class sketch20150701 : public Sketch {
 
 public:
-    void setup();
+    void setup(vector<Skeleton>* _skeletons);
     void update();
     void draw();
     
@@ -23,4 +23,5 @@ public:
     ofxTexturePlane texture;
     ofxLayerMask masker;
     int finalFrame, frameDecay, lastDrawableFrameForLoop;
+    float incrementX;
 };

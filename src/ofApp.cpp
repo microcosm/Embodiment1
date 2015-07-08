@@ -5,27 +5,27 @@ void ofApp::setup(){
     ofSetFrameRate(60);
     ofEnableSmoothing();
 
-    sketches.push_back(&sketch20150701);
-
-    for(int i = 0; i < sketches.size(); i++) {
-        sketches.at(i)->setup();
-        patterns.push_back(projectionMask.newPattern(sketches.at(i)->width, sketches.at(i)->height));
-    }
-    projectionMask.setup(HOMOGRAPHY);
-    //designer.setup(HOMOGRAPHY, PRESETS_PRODUCTION);
-
     smallFont.loadFont("selena.otf", 16);
     largeFont.loadFont("selena.otf", 48);
-
+    
     kinect.setup(12345, smallFont);
     skeletons = kinect.getSkeletons();
     renderer.setup(skeletons, largeFont);
     renderer.hideAll();
     drawKinect = false;
-
+    
     kinectCommands = "KINECT\n\n";
     kinectCommands.append("d = show debug\n");
     kinectCommands.append("k = show kinect\n");
+
+    sketches.push_back(&sketch20150701);
+
+    for(int i = 0; i < sketches.size(); i++) {
+        sketches.at(i)->setup(skeletons);
+        patterns.push_back(projectionMask.newPattern(sketches.at(i)->width, sketches.at(i)->height));
+    }
+    projectionMask.setup(HOMOGRAPHY);
+    //designer.setup(HOMOGRAPHY, PRESETS_PRODUCTION);
 }
 
 void ofApp::update(){
@@ -45,9 +45,6 @@ void ofApp::draw(){
         patterns.at(i)->end();
     }
     projectionMask.draw();
-    
-    ofSetColor(ofColor::white);
-    smallFont.drawString(kinectCommands, ofGetWidth() - 200, 60);
 
     if(drawKinect) {
         ofEnableAlphaBlending();
@@ -55,10 +52,14 @@ void ofApp::draw(){
         ofFill();
         ofRect(0, 0, ofGetWidth(), ofGetHeight());
         ofDisableAlphaBlending();
+        ofSetColor(ofColor::white);
         kinect.drawDebug();
         renderer.draw();
-        ofSetColor(ofColor::white);
+        smallFont.drawString(kinectCommands, ofGetWidth() - 200, 60);
         largeFont.drawString("fps:\n" + ofToString(ofGetFrameRate()), ofGetWidth() - 220, ofGetHeight() - 100);
+    } else {
+        kinect.drawDebug();
+        smallFont.drawString(kinectCommands, ofGetWidth() - 200, 60);
     }
 }
 
