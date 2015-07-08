@@ -3,7 +3,12 @@
 void sketch20150701::setup(vector<Skeleton>* _skeletons){
     Sketch::setup(_skeletons);
     setSize(500, 500);
-    
+
+    minInfluenceX = -0.01;
+    maxInfluenceX = 0.01;
+    minInfluenceY = -0.02;
+    maxInfluenceY = 0.003;
+
     ofEnableSmoothing();
     shapeSystem.setup();
     masker.setup(8);
@@ -42,17 +47,20 @@ void sketch20150701::update(){
     }
 
     if(skeletons->size() > 0) {
-        leftInfluence.x = ofMap(skeletons->at(0).getLeftHandNormal().x, 0, 1, -0.01, 0.01);
-        rightInfluence.x = ofMap(skeletons->at(0).getRightHandNormal().x, 0, 1, -0.01, 0.01);
+        leftInfluence.x = ofMap(skeletons->at(0).getLeftHandNormal().x, 0, 1, minInfluenceX, maxInfluenceX);
+        leftInfluence.y = ofMap(skeletons->at(0).getLeftHandNormal().y, 0, 1, minInfluenceY, maxInfluenceY);
+        rightInfluence.x = ofMap(skeletons->at(0).getRightHandNormal().x, 0, 1, minInfluenceX, maxInfluenceX);
+        rightInfluence.y = ofMap(skeletons->at(0).getRightHandNormal().y, 0, 1, minInfluenceY, maxInfluenceY);
         for(int i = 0; i < textures.size(); i++) {
-            (i % 2 == 0) ?
-                textures.at(i).incrementTextureOffsetX(leftInfluence.x) :
-                textures.at(i).incrementTextureOffsetX(rightInfluence.x);
+            if(i % 2 == 0) {
+                textures.at(i).incrementTextureOffset(leftInfluence);
+            } else {
+                textures.at(i).incrementTextureOffset(rightInfluence);
+            }
         }
     }
     
     for(int i = 0; i < masker.numLayers(); i++) {
-        textures.at(i % textures.size()).incrementTextureOffsetY(-0.005555555);
         masker.beginLayer(i);
         {
             ofBackground(ofColor::black);

@@ -24,4 +24,6 @@ public:
     ofxLayerMask masker;
     int finalFrame, frameDecay, lastDrawableFrameForLoop;
     ofVec2f leftInfluence, rightInfluence;
+    float minInfluenceX, minInfluenceY;
+    float maxInfluenceX, maxInfluenceY;
 };
