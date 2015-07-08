@@ -2,7 +2,7 @@
 
 void sketch20150701::setup(vector<Skeleton>* _skeletons){
     Sketch::setup(_skeletons);
-    setSize(500, 500);
+    setSize(900, 400);
 
     minInfluenceX = -0.01;
     maxInfluenceX = 0.01;

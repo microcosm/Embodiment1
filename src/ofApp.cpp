@@ -18,12 +18,14 @@ void ofApp::setup(){
     kinectCommands.append("d = show debug\n");
     kinectCommands.append("k = show kinect\n");
 
-    sketches.push_back(&sketch20150701);
-
-    for(int i = 0; i < sketches.size(); i++) {
-        sketches.at(i)->setup(skeletons);
-        patterns.push_back(projectionMask.newPattern(sketches.at(i)->width, sketches.at(i)->height));
+    sketch20150701.setup(skeletons);
+    initFbo(slicingFbo, sketch20150701.width, sketch20150701.height);
+    numProjectionMaskBuffers = 3;
+    projectionMaskBufferWidth = sketch20150701.width / numProjectionMaskBuffers;
+    for(int i = 0; i < numProjectionMaskBuffers; i++) {
+        patterns.push_back(projectionMask.newPattern(projectionMaskBufferWidth, sketch20150701.height));
     }
+
     //projectionMask.setup(HOMOGRAPHY);
     projectionMask.setup(HOMOGRAPHY, PRESETS_PRODUCTION);
 }
@@ -31,16 +33,20 @@ void ofApp::setup(){
 void ofApp::update(){
 	kinect.update();
     projectionMask.update(mouseX, mouseY);
-    for(int i = 0; i < sketches.size(); i++) {
-        sketches.at(i)->update();
-    }
+    sketch20150701.update();
 }
 
 void ofApp::draw(){
-    for(int i = 0; i < sketches.size(); i++) {
+    slicingFbo.begin();
+    {
+        sketch20150701.draw();
+    }
+    slicingFbo.end();
+
+    for(int i = 0; i < numProjectionMaskBuffers; i++) {
         patterns.at(i)->begin();
         {
-            sketches.at(i)->draw();
+            slicingFbo.draw(-(projectionMaskBufferWidth * i), 0);
         }
         patterns.at(i)->end();
     }
@@ -75,6 +81,13 @@ void ofApp::keyReleased(int key){
     } else {
         projectionMask.keyReleased(key);
     }
+}
+
+void ofApp::initFbo(ofFbo &fbo, int width, int height) {
+    fbo.allocate(width, height, GL_RGB);
+    fbo.begin();
+    ofBackground(ofColor::white);
+    fbo.end();
 }
 
 void ofApp::mouseDragged(int x, int y, int button){

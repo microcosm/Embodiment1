@@ -16,6 +16,8 @@ public:
 
     void keyPressed(int key);
     void keyReleased(int key);
+
+    void initFbo(ofFbo &fbo, int width, int height);
     void mouseMoved(int x, int y);
     void mouseDragged(int x, int y, int button);
     void mousePressed(int x, int y, int button);
@@ -26,8 +28,7 @@ public:
 
     ofxProjectionMask projectionMask;
     vector<ofxLayerMask*> patterns;
-    vector<Sketch*> sketches;
-
+    ofFbo slicingFbo;
     sketch20150701 sketch20150701;
 
     ofxKinectV2OSC kinect;
@@ -37,4 +38,7 @@ public:
     BodyRenderer renderer;
     bool drawKinect;
     string kinectCommands;
+    int projectionMaskBufferWidth;
+    int numProjectionMaskBuffers;
+    float x;
 };
